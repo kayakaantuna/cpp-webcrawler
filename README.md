@@ -11,6 +11,9 @@
 ## Resource
 - [C++ Web Scraping: Tutorial 2024](https://www.zenrows.com/blog/c-plus-plus-web-scraping#c-plus-plus-good-for-web-scraping)
 
+## Dependencies
+
+```libcurl-dev```
 
 ## How to compile
 
