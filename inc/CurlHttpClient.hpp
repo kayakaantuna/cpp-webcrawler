@@ -14,5 +14,5 @@ public:
 private:
     static size_t writeData(void *buffer, size_t size, size_t memoryBlocks, void *userPointer);
 
-    CURL *curl_handle;
+    CURL *m_curlHandle;
 };
