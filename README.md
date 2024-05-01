@@ -13,7 +13,9 @@
 
 ## Dependencies
 
-```libcurl-dev```
+```console
+sudo apt install curl libcurl4-openssl-dev libxml2-dev libxml2-doc
+```
 
 ## How to compile
 
