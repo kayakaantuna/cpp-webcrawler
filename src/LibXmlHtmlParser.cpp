@@ -3,10 +3,25 @@
 #include <libxml/HTMLparser.h>
 #include <libxml/xpath.h>
 
+
+/**
+ * @brief: Simple push_back function to vector.
+ * @details: Here you can add your search pre-populated search queries.
+ * 
+ * Author: Kaya Kaan Tuna <tunakayakaan@gmail.com>
+*/
+void LibXmlHtmlParser::addSearchQuery(const std::string& query) {
+    searchQueries.push_back(query);
+}
+
+const std::vector<std::string>& LibXmlHtmlParser::getResults() const {
+    return searchResults;
+}
+
 /**
  * @brief: Parsing HTML function.
  * @details: It takes the already curled HTML content and then
- * parses it with the desired key word, in this case is `Fee Reduction Program`.
+ * parses it with the desired key word, for example `Fee Reduction Program`.
  * If it's successful it returns with 'Found $KEYWORD info:' and prints the content.
  * If it's not successful it returns 'No result'.
  * 
@@ -23,7 +38,6 @@
     options:	a combination of htmlParserOption(s)
     Returns:	the resulting document tree
  * 
- * xmlXPathContext just allocates memory. The caller will need to free it.
  * 
  * @param htmlContent   basically the whole html code of the page.
  * 
@@ -34,36 +48,57 @@ void LibXmlHtmlParser::parseHTML(const std::string& htmlContent) {
     // Parse the HTML content
     htmlDocPtr doc = htmlReadDoc((xmlChar*)htmlContent.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
     
+    if (!doc) {
+        std::cerr << "Failed to parse HTML document\n";
+        return;
+    }
+
+    for (const auto& query : searchQueries) {
+        searchInHTML(doc, query);
+    }
+
+    xmlFreeDoc(doc);
+}
+
+/**
+ * @brief: Search the searchQueries in html content.
+ * 
+ * xmlXPathContext just allocates memory. The caller will need to free it.
+ * 
+ * Author: Kaya Kaan Tuna <tunakayakaan@gmail.com>
+*/
+void LibXmlHtmlParser::searchInHTML(xmlDocPtr doc, const std::string& query) {
     // Create XPath context
     xmlXPathContextPtr context = xmlXPathNewContext(doc);
-    if (context == NULL) {
+    if (!context) {
         std::cerr << "Error in xmlXPathNewContext\n";
         return;
     }
 
     // Evaluate XPath expression
-    xmlXPathObjectPtr result = xmlXPathEvalExpression((xmlChar*)"//div[contains(., 'Fee Reduction Program')]", context);
-    if (result == NULL) {
+    std::string xpathExpr = "//div[contains(., '" + query + "')]";
+    xmlXPathObjectPtr result = xmlXPathEvalExpression((xmlChar*)xpathExpr.c_str(), context);
+    if (!result) {
         std::cerr << "Error in xmlXPathEvalExpression\n";
         return;
     }
 
     // Check if we found any results
-    if (xmlXPathNodeSetIsEmpty(result->nodesetval)) {
-        std::cout << "No result\n";
-    } else {
+    if (!xmlXPathNodeSetIsEmpty(result->nodesetval)) {
         for (int i = 0; i < result->nodesetval->nodeNr; ++i) {
             xmlNodePtr node = result->nodesetval->nodeTab[i];
             xmlChar* content = xmlNodeGetContent(node);
             if (content) {
-                std::cout << "Found Fee Reduction Program info: " << content << std::endl;
+                std::cout << "Found:" << std::endl;
+                searchResults.push_back(std::string((char*)content));
                 xmlFree(content);
             }
         }
+    } else {
+        searchResults.push_back("No results found for query: " + query);
     }
-
+    
     // Cleanup
     xmlXPathFreeObject(result);
     xmlXPathFreeContext(context);
-    xmlFreeDoc(doc);
 }
