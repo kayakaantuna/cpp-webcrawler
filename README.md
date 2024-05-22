@@ -14,7 +14,17 @@
 ## Dependencies
 
 ```console
-sudo apt install curl libcurl4-openssl-dev libxml2-dev libxml2-doc
+sudo apt install curl libcurl4-openssl-dev libxml2-dev libxml2-doc default-jre
+```
+
+Selenium Grid (Version may change, 4.21.0 stable)
+```console
+weget https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.21.0/selenium-server-4.21.0.jar
+```
+
+Selenium Grid Start code (Not sure at the momment, but leaving it here)
+```console
+java -jar selenium-server-4.21.0.jar -port 4444 &
 ```
 
 ## How to compile

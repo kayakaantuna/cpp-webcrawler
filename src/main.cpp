@@ -1,6 +1,8 @@
 #include "CurlHttpClient.hpp"
 #include "LibXmlHtmlParser.hpp"
 #include <iostream>
+#include "webdriverxx.h"
+using namespace webdriverxx;
 
 int main(int argc, char* argv[])
 {
@@ -29,6 +31,8 @@ int main(int argc, char* argv[])
         std::cout << results << std::endl;
     }
     client.disable();
+
+    WebDriver gc = Start(Chrome());
     
     return 0;
 }
