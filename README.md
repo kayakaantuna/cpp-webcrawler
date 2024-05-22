@@ -22,6 +22,6 @@ sudo apt install curl libcurl4-openssl-dev libxml2-dev libxml2-doc
 ```console
 mkdir build && cd build
 cmake ..
-make
+sudo make && sudo make install
 ```
 

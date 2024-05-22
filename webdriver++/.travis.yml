@@ -1,0 +1,22 @@
+language: cpp
+
+compiler:
+    - gcc
+    - clang
+
+branches:
+  only:
+    - master
+    - dev
+
+before_script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+    - phantomjs --webdriver=7777 --webdriver-loglevel=WARN &
+    - npm install http-server -g
+    - http-server ./test/pages --silent &
+
+script:
+    - cmake --build .
+    - ctest -V

@@ -14,6 +14,11 @@ include_directories(inc)
 
 file(GLOB SOURCES "src/*.cpp")
 
+# Webdriver++
+add_subdirectory(webdriver++)
+include_directories(webdriver++/include)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries(${PROJECT_NAME} webdriverxx ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} ${LIBXML2_LIBRARIES})
